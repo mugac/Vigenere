@@ -44,8 +44,9 @@ def get_coincidence_index(text):
     total = len(text)
     freq = get_freq(text)
     index = 0
-    for char, count in freq.items():
+    for count in freq.values():
         index += (count * (count - 1)) / (total * (total - 1))
+    #print(index)
     return index
 
 def get_key_length(ct, maxLen):
