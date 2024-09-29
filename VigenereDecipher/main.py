@@ -4,7 +4,7 @@ ct = "vrchxzveworpuaeywzmeqfvpjveitzcowukwzzspbboiycovllsyfuadmadefrcltnomjvtksb
 keyLenght = 7;
 maxLen = 10
 key = ""
-maxLen = 15
+maxLen = 20
 
 frequen_czech = {
     "a":	9.5893,
@@ -36,21 +36,30 @@ frequen_czech = {
 }
 sorted_freq_czech = sorted(frequen_czech.items(), key=lambda x: x[1], reverse=True)
 
+def get_freq(text):
+    freq = Counter(text)
+    return freq
+
 def get_coincidence_index(text):
-    print(text)
+    total = len(text)
+    freq = get_freq(text)
+    index = 0
+    for char, count in freq.items():
+        index += (count * (count - 1)) / (total * (total - 1))
+    return index
 
 def get_key_length(ct, maxLen):
-    for i in range(1, len(ct)):
-        match = 0
-        ctShift = ct[-i:] + ct[:-i]
-        #print(ctShift)
+    for i in range(2, maxLen):
+        keyCoincidence = 0
+        keyGroups = ['' for j in range(i)]
         for j in range(len(ct)):
-            if ctShift[j] == ct[j]:
-                match += 1
-        print(i,": ",match)
-    # for i in range(1, len(ct)):
-    #     ctShift = ct[-i:] + ct[:-i]
-    # return ctShift
+            keyGroups[j%i] += ct[j]
+        #print(keyGroups)
+        for group in keyGroups:
+            keyCoincidence += get_coincidence_index(group)
+        keyCoincidence /= i
+        print(i, ": ", keyCoincidence)
+
         
 test = get_key_length(ct, maxLen)
 
@@ -58,9 +67,6 @@ Groups = ['' for j in range(keyLenght)]
 for i in range(len(ct)):
     Groups[i%keyLenght] += ct[i]
 
-def get_freq(text):
-    freq = Counter(text)
-    return freq
 
 def relative_freq(group):
     total = len(group)
