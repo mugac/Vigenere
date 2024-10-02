@@ -1,12 +1,11 @@
 from collections import Counter
 import matplotlib.pyplot as plt
-import numpy as np
 import string
 
 ct = "dejlogmnpnnravvncvtkrsegvbcjkrkejuakwejurvenzfvippvtadpskbtepskjnrcycpjrloebskvpejcbzskbttfsbpscpvvosbbpifdkjmvyijuomblfkabpjvenraeuwolsegvbcjktfsbpscpvvosbffveeibcvoambzlkekbkvoamjcvoequijjczmekfdvkiezcvtkvttrunfttzbklmtlsygpdcfsmfujuamzjvdejlaifplclzlagbrcbmvotejdvnobsakjcbzpibvejskbtjmisfrrmnznskbtejmifzznedbpfmikjcbzmjzskfmvnzrmoqfnpnnrtvfcouoejpukfzzqocjtzdkpdhjurroayoukjhcbvfvskbtlkegseqjdvotifplclzlymscyplezmrkeujnpnzrloepdrsnpnoihaefmafdmpubpmfsomzprslrneeucvtkvsegvbcjkpoamscypllnotjvploeoejuoajvcbdrdejleifplclzlytfsbpjvaedfskszejmypsgpdrsskwidltvsagpdcfebpnfnitlytisfdirmnzdhrqocjtzdkpdhzodzlakprlkabpjvidgoafcymbtvmezodvylzesbfhfsoqwoafieeeotvfcouztztkldizodvysmpbfeyzotvsnvuufecvozlsygbtijkmzsfdeipzmjnluydttruudtvvuavloepmzdkpqaksiumejwekpvvcaelyupsbvpzoyksitftzkeuoaefjsphruszdhjuakvsmftrtnvkvptszniwjnrocejmzqrzkmpwpfsomoaejsajnpnijuakzmrwecnidblpqoujlfcymbtvmzzkitjcyqouqrrieddhleoszvplaqvjvueqqodfrefnzakfvnvsomoojumvaiefjsphruszniroeadhlesznifcymbtvmirsecbtzwnvwymbzvoegseipzuflfwaejbfiakttmjnrqrzdpfqucbczniibnvaadfskoaepskjjvelfvhfeosfnzakrbpfepivmvsedwyjqeczcyaedjvzodvyuvlocpgzdkvttfqyafcvtkfppiptzoebueizmajnpnvptpvmydaedjmdfnjjmvlocpgzdkpndcvzejkvncvtkfteumolioupbvsaujmvaigbtebckoeaceqqetoeatitizvniebsmftv"
 keyLenght = 3;
 maxLen = 10
-key = ""
+key = "bar"
 maxLen = 20
 
 frequency_czech = [
@@ -37,7 +36,6 @@ frequency_czech = [
     ("y", 2.8575),
     ("z", 3.3026)
 ]
-#sorted_freq_czech = sorted(frequency_czech.items(), key=lambda x: x[1], reverse=True)
 
 def get_freq(text):
     alphabet = string.ascii_lowercase
@@ -53,7 +51,6 @@ def get_coincidence_index(text):
     index = 0
     for count in freq.values():
         index += (count * (count - 1)) / (total * (total - 1))
-    #print(index)
     return index
 
 def get_key_length(ct, maxLen):
@@ -62,18 +59,25 @@ def get_key_length(ct, maxLen):
         keyGroups = ['' for j in range(i)]
         for j in range(len(ct)):
             keyGroups[j%i] += ct[j]
-        #print(keyGroups)
         for group in keyGroups:
             keyCoincidence += get_coincidence_index(group)
         keyCoincidence /= i
         print(i, ": ", keyCoincidence)
-
 
 def relative_freq(group):
     total = len(group)
     freq = get_freq(group)
     rel_freq = {char: (count / total) * 100 for char, count in freq.items()}
     return sorted(rel_freq.items(), key=lambda x: x[0], reverse=False)
+
+def decypher_vigenere(ct, key):
+    alphabet = string.ascii_lowercase
+    key = key.lower()
+    keyLenght = len(key)
+    pt = ''
+    for i in range(len(ct)):
+        pt += alphabet[(alphabet.index(ct[i]) - alphabet.index(key[i % keyLenght])) % 26]
+    return pt
 
 Groups = ['' for j in range(keyLenght)]
 for i in range(len(ct)):
@@ -84,35 +88,18 @@ fig, axs = plt.subplots(2, keyLenght, figsize=(15, 2 * keyLenght))
 for idx, group in enumerate(Groups):
     freqrel = relative_freq(group)
     
-    print(f"Group {idx + 1}: freqrel = {freqrel}")
-    print(f"Group {idx + 1}: frequency_czech = {frequency_czech}")
-    
     axs[0, idx].bar([val[0] for val in freqrel], [val[1] for val in freqrel], align='center')
-    axs[0, idx].set_title(f'Group {idx + 1} Relative Frequencies')
-    axs[0, idx].set_xlabel('Letters')
-    axs[0, idx].set_ylabel('Frequency (%)')
+    axs[0, idx].set_title(f'Pismeno {idx + 1} Relativní frekvence')
+    axs[0, idx].set_xlabel('Pismena')
+    axs[0, idx].set_ylabel('Frekvence (%)')
     
     axs[1, idx].bar([val[0] for val in frequency_czech], [val[1] for val in frequency_czech], align='center')
-    axs[1, idx].set_title(f'Group {idx + 1} Czech Frequencies')
-    axs[1, idx].set_xlabel('Letters')
-    axs[1, idx].set_ylabel('Frequency (%)')
-    
-    # print(freqrel)
-    # print()
-    # print(sorted_freq_czech)
-    # print("-------------------------------------------------")
-    
+    axs[1, idx].set_title('Ceska frekvence')
+    axs[1, idx].set_xlabel('Pismena')
+    axs[1, idx].set_ylabel('Frekvence (%)')
+
+#print(decypher_vigenere(ct, key))
+
 plt.tight_layout()
+plt.savefig('test.pdf')
 plt.show()
-# print()
-# print(Groups)
-
-
-# for i in range(1, len(ct)):
-#         match = 0
-#         ctShift = ct[-i:] + ct[:-i]
-#         #print(ctShift)
-#         for j in range(len(ct)):
-#             if ctShift[j] == ct[j]:
-#                 match += 1
-#         print(i,": ",match)
