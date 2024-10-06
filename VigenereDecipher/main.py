@@ -98,8 +98,10 @@ for idx, group in enumerate(Groups):
     axs[1, idx].set_xlabel('Pismena')
     axs[1, idx].set_ylabel('Frekvence (%)')
 
+print(get_key_length(ct, maxLen))
+
 #print(decypher_vigenere(ct, key))
 
 plt.tight_layout()
-plt.savefig('test.pdf')
+# plt.savefig('test.pdf')
 plt.show()
