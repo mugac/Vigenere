@@ -34,4 +34,25 @@ Pro výpočet indexu koincidence skupiny písmen délky $n$ se používá vzorec
 $IK = \sum \limits_{i=1}^{26} \frac{n_i (n_i - 1)}{n (n - 1)}$\\
 Abychom udělali průměr pro všechny skupiny, použijeme vzorec:
 $IK_{prum} = \frac{1}{n} \sum \limits_{i=1}^{n} IK_i$\\
+\\
+Index koincidence můžeme počítat od minimální odhadovaé délky až po 
+maximální odhadovanou délku klíče. Také je možné přidat hodnoty možných 
+délek získaných například pomocí Kasiského testu.\\
+\\
+Hodnoty koincidence pro různé delky hesla následně porovnáme s indexem
+koincidence pro daný jazyk. Délka klíče je pravděpodobně ta hodnota, která 
+se nejvíce shoduje.
+
+\subsection{Prolomení}
+Při znalosti délky klíče máme k prolomení šifry více možných postupů
+\subsubsection{Útok hrubou silou}
+Útok hrubou islou je praktický pouze u krátkých klíčů, jelikož jeho časová 
+a výpočetní náročnost exponenciálně roste s délkou klíče.
+\subsubsection{Frekvenční analýza}
+Způsob pomocí frekvenční analýzy využívá toho, že v každém jazyce se každé 
+písmeno vyskytuje ve své vlastní frekvenci oproti čistě náhodnému textu, kde
+by frekvence písmen měla být velmi podobná.
+\\\\
+Běžně jsou nejčastější samohlásky E a A. 
+
 \end{document}
