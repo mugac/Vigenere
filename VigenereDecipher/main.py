@@ -1,4 +1,3 @@
-from collections import Counter
 import matplotlib.pyplot as plt
 import string
 
@@ -54,7 +53,7 @@ def get_coincidence_index(text):
     return index
 
 def get_key_length(ct, maxLen):
-    for i in range(2, maxLen):
+    for i in range(2, maxLen+1):
         keyCoincidence = 0
         keyGroups = ['' for j in range(i)]
         for j in range(len(ct)):
@@ -74,10 +73,10 @@ def decypher_vigenere(ct, key):
     alphabet = string.ascii_lowercase
     key = key.lower()
     keyLenght = len(key)
-    pt = ''
+    ot = ''
     for i in range(len(ct)):
-        pt += alphabet[(alphabet.index(ct[i]) - alphabet.index(key[i % keyLenght])) % 26]
-    return pt
+        ot += alphabet[(alphabet.index(ct[i]) - alphabet.index(key[i % keyLenght])) % 26]
+    return ot
 
 Groups = ['' for j in range(keyLenght)]
 for i in range(len(ct)):
@@ -100,7 +99,7 @@ for idx, group in enumerate(Groups):
 
 print(get_key_length(ct, maxLen))
 
-#print(decypher_vigenere(ct, key))
+print(decypher_vigenere(ct, key))
 
 plt.tight_layout()
 # plt.savefig('test.pdf')
